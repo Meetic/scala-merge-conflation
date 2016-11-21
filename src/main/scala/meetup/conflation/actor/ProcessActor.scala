@@ -12,6 +12,6 @@ class ProcessActor extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case event: ChangeEvent =>
-      log.info(s"Processing $event")
+      log.info(s"Computing Pizza price from $event")
   }
 }
