@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import meetup.conflation.actor.ConflationActor.Tick
 import meetup.conflation.conflation.{Conflated, Conflation}
 import meetup.conflation.event._
+import meetup.conflation.monitoring.InstrumentedConflation
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -14,11 +15,13 @@ object ConflationActor {
   def props(target: ActorRef): Props = Props(new ConflationActor(target))
 }
 
-class ConflationActor(target: ActorRef) extends Actor with ActorLogging with Conflation[PriceChange, MergedPriceChange] {
+class ConflationActor(target: ActorRef) extends Actor with ActorLogging
+  with Conflation[PriceChange, MergedPriceChange] with InstrumentedConflation {
 
   override val buffer = mutable.HashMap[String, Conflated[PriceChange]]()
 
   override def bufferEvent(event: PriceChange): Unit = {
+    recorder.recordIn()
     buffer
       .getOrElseUpdate(event.providerId, Conflated(ListBuffer(), System.currentTimeMillis()))
       .events.append(event)
@@ -37,9 +40,13 @@ class ConflationActor(target: ActorRef) extends Actor with ActorLogging with Con
 
   override def sendMergedEvents(): Unit = {
     log.info(s"Processing conflated events (${buffer.size})")
+    recorder.recordBufferSize(buffer.size)
+
     val threshold = System.currentTimeMillis() - delay.toMillis
     buffer.retain {
       case (_, conflated) if conflated.time < threshold =>
+        recorder.recordMerge(conflated.events.size)
+        recorder.recordOut()
         target ! mergeEvents(conflated.events)
         false
 
