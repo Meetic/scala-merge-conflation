@@ -4,6 +4,9 @@ import java.time.ZonedDateTime
 
 sealed trait PriceChange {
   def providerId: String
+  def price: BigDecimal
+  def source: String
+  def time: ZonedDateTime
 }
 
 case class TomatoPriceChange
