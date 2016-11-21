@@ -12,9 +12,9 @@ trait Conflation[E, G] {
 
   def bufferEvent(event: E): Unit
 
-  def mergeEvents(events: Seq[E]): G
-
   def onTick(): Unit
+
+  def mergeEvents(events: Seq[E]): G
 }
 
 case class Conflated[E](events: mutable.ListBuffer[E], time: Long)
