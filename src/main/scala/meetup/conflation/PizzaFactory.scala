@@ -9,7 +9,7 @@ object PizzaFactory extends App {
   implicit val system = ActorSystem("pizza-factory")
 
   val idRangeStart = 1000
-  val idRangeEnd = 1200
+  val idRangeEnd = 1800
   val sourceDelay = 2 millis
 
   val processActor = system.actorOf(ProcessActor.props(), "Process")
