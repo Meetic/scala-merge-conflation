@@ -1,7 +1,7 @@
 package meetup.conflation.actor
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import meetup.conflation.event.ChangeEvent
+import meetup.conflation.event.PriceChange
 
 object ConflationActor {
 
@@ -11,6 +11,6 @@ object ConflationActor {
 class ConflationActor(target: ActorRef) extends Actor with ActorLogging {
 
   override def receive: Receive = {
-    case event: ChangeEvent => target ! event
+    case event: PriceChange => target ! event
   }
 }

@@ -2,7 +2,7 @@ package meetup.conflation.event
 
 import java.time.ZonedDateTime
 
-sealed trait ChangeEvent {
+sealed trait PriceChange {
   def providerId: String
 }
 
@@ -12,7 +12,7 @@ case class TomatoPriceChange
   price: BigDecimal,
   source: String,
   time: ZonedDateTime
-) extends ChangeEvent
+) extends PriceChange
 
 case class MushroomPriceChange
 (
@@ -20,7 +20,7 @@ case class MushroomPriceChange
   price: BigDecimal,
   source: String,
   time: ZonedDateTime
-) extends ChangeEvent
+) extends PriceChange
 
 case class FlourPriceChange
 (
@@ -28,4 +28,4 @@ case class FlourPriceChange
   price: BigDecimal,
   source: String,
   time: ZonedDateTime
-) extends ChangeEvent
+) extends PriceChange
