@@ -35,7 +35,7 @@ class ConflationActor(target: ActorRef) extends Actor with ActorLogging with Con
     MergedPriceChange(events.head.providerId, tomatoPrice, mushroomPrice, flourPrice, events.last.time)
   }
 
-  override def onTick(): Unit = {
+  override def sendMergedEvents(): Unit = {
     log.info(s"Processing conflated events (${buffer.size})")
     val threshold = System.currentTimeMillis() - delay.toMillis
     buffer.retain {
@@ -49,7 +49,7 @@ class ConflationActor(target: ActorRef) extends Actor with ActorLogging with Con
 
   override def receive: Receive = {
     case event: PriceChange => bufferEvent(event)
-    case Tick => onTick()
+    case Tick => sendMergedEvents()
   }
 
   import context.dispatcher
