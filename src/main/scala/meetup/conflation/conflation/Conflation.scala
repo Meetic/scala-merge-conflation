@@ -12,7 +12,7 @@ trait Conflation[E, G] {
 
   def bufferEvent(event: E): Unit
 
-  def onTick(): Unit
+  def sendMergedEvents(): Unit
 
   def mergeEvents(events: Seq[E]): G
 }
