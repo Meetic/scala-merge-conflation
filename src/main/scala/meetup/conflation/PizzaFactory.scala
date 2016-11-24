@@ -12,6 +12,8 @@ object PizzaFactory extends App {
   val idRangeEnd = 1800
   val sourceDelay = 2 millis
 
+  // [ Source ] -> [ Conflation ] -> [ Process ]
+
   val processActor = system.actorOf(ProcessActor.props(), "Process")
   val conflationActor = system.actorOf(ConflationActor.props(processActor), "Conflate")
   system.actorOf(SourceActor.props(conflationActor, idRangeStart, idRangeEnd, sourceDelay), "Source")
